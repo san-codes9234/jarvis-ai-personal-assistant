@@ -51,3 +51,12 @@ jarvis-ai-personal-assistant/
 👨‍💻 Author
 
 Sankalp Kumar
+
+🔑 Perplexity API Setup
+
+This project uses the Perplexity API to generate intelligent responses.
+
+Steps:
+Get your API key from Perplexity AI
+Set your API key in the code:
+API_KEY = "your_api_key_here"
