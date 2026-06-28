@@ -5,18 +5,14 @@ import webbrowser
 import pyttsx3
 import musicLibrary
 from dotenv import load_dotenv
-from openai import OpenAI  # Perplexity quickstart uses OpenAI-compatible SDK
+from openai import OpenAI
 
-# Load .env located next to this file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
-# Read Perplexity key from .env
 PPLX_KEY = os.getenv("PERPLEXITY_API_KEY")
 if not PPLX_KEY:
     raise RuntimeError("PERPLEXITY_API_KEY missing in .env")
 
-# Initialize client for Perplexity (quickstart shows the OpenAI-compatible SDK usage)
-# If your environment requires a full base path, you can try: base_url="https://api.perplexity.ai"
 client = OpenAI(api_key=PPLX_KEY, base_url="https://api.perplexity.ai")
 
 recognizer = sr.Recognizer()
@@ -40,20 +36,15 @@ def _clean_text(text: str) -> str:
     if not text:
         return ""
 
-    # Remove HTML tags
     text = re.sub(r"<[^>]+>", "", text)
 
-    # Remove citation markers like [1], [12], (1), (see source)
     text = re.sub(r"\[\d+\]", "", text)
     text = re.sub(r"\(\d+\)", "", text)
 
-    # Remove common 'Sources:' or 'References' sections (keep only sentence before them)
     text = re.split(r"\n\s*(Sources|References|Citations)[:\n]", text, flags=re.IGNORECASE)[0]
 
-    # Remove leftover URLs
     text = re.sub(r"https?://\S+", "", text)
 
-    # Collapse whitespace
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
@@ -71,10 +62,7 @@ def aiProcess(command: str) -> str:
                 {"role": "system", "content": "You are Jarvis. Keep responses short and plain text (no markdown, no citations)."},
                 {"role": "user", "content": command}
             ],
-            # optional: temperature=0.2, max_tokens=200
         )
-
-        # Defensive extraction
         text = ""
         if hasattr(completion, "choices") and completion.choices:
             choice = completion.choices[0]
